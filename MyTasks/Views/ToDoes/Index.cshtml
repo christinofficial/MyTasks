@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MyTasks.Models.ToDo>
+
+@{
+    ViewData["Title"] = "My Tasks";
+}
+
+<div style="display:flex">
+    <h2>Items to Do</h2>
+    <span style="width:10pt;"></span>
+     <input type="button" value="+" title="Add new task" onclick="location.href='@Url.Action("Create", "ToDoes")'" class="btn btn-primary" />   
+</div>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="@(item.TargetDate < DateTime.Now ? "bg-danger bg-opacity-50 text-white" : "bg-white")">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td style="display:inline-flex;">
+                    @using (Html.BeginForm("Delete", "ToDoes", new { Id = item.Id }, FormMethod.Post))
+                    {
+                       <button type="submit" title="Delete" class="btn btn-primary">X</button>
+                    }
+                    <span style="width:10pt;"></span>
+                    @using (Html.BeginForm("UpdateStatus", "ToDoes", new { Id = item.Id }, FormMethod.Post))
+                    {
+                        <button type="submit" title="Mark Completed" class="btn btn-primary @(item.Status == "Started" ? "active" : "disabled")">&#10003;</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
